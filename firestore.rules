@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ============ 在售商品 products ============
+    match /products/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // ============ 商品回收站 product_trash ============
+    match /product_trash/{document=**} {
+      allow read, write: if true;
+    }
+
+    // ============ 精品图库 gallery ============
+    match /gallery/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // ============ 图库回收站 gallery_trash ============
+    match /gallery_trash/{document=**} {
+      allow read, write: if true;
+    }
+
+    // ============ 订单 / 物流 / 客户 / 系统配置 / 访问事件 ============
+    match /orders/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /logistics/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /customers/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /system_config/siteDomain {
+      allow read, write: if true;
+    }
+
+    match /system_config/{document=**} {
+      allow read, write: if true;
+    }
+
+    match /accessEvents/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /uploaded_images/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /gallery_images/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+
+    // ============ ReelVerse 独立短剧站集合（附加，商城数据不动） ============
+    match /reelverse_dramas/{document=**} {
+      allow read, write: if true;
+    }
+    match /reelverse_transactions/{document=**} {
+      allow read, write: if true;
+    }
+    match /reelverse_unlocks/{document=**} {
+      allow read, write: if true;
+    }
+
+    // ============ 兜底：未显式授权的集合一律拒绝 ============
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
